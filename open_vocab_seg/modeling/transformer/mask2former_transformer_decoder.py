@@ -330,7 +330,7 @@ class MultiScaleMaskedTransformerDecoder(nn.Module):
 
         # output FFNs
         if self.mask_classification:
-            self.class_embed = nn.Linear(hidden_dim, num_classes + 1)
+            self.class_embed = MLP(hidden_dim,1024,768,2)
         self.mask_embed = MLP(hidden_dim, hidden_dim, mask_dim, 3)
 
     @classmethod
