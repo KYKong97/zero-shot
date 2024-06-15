@@ -4,6 +4,7 @@ from detectron2.engine import (
     default_setup,
     launch,
 )
+from tqdm import tqdm
 import torch
 import copy
 import itertools
@@ -276,15 +277,23 @@ def setup(args):
 
 
 def main(args):
-    cfg = setup(args)
-    model = Trainer.build_model(cfg)
-    DetectionCheckpointer(model, save_dir=cfg.OUTPUT_DIR).resume_or_load(
-        cfg.MODEL.WEIGHTS, resume=args.resume
-    )
-    input_torch = torch.randn((1,3,640,640))
-    flops = FlopCountAnalysis(model, input_torch)
-    print("Total Flops:",flops.total())
-    print("Total Flops:",flop_count(model,input_torch))
+    list_flops = []
+    with torch.no_grad():
+        cfg = setup(args)
+        model = Trainer.build_model(cfg)
+        DetectionCheckpointer(model, save_dir=cfg.OUTPUT_DIR).resume_or_load(
+            cfg.MODEL.WEIGHTS, resume=args.resume
+        )
+        for i in tqdm(range(10)):
+            input_torch = torch.randn((3,640,640))
+            input_dict= [{"image":input_torch,"class_names":"people"}]
+            flops = FlopCountAnalysis(model, input_dict)
+            flops_count = flops.total()
+            print("Total Flops:",flops_count)
+            print("#### GFLOPs: {:.1f}".format(flops_count / 1e9))
+            list_flops.append(flops_count)
+        avg_flops = sum(list_flops)/len(list_flops)
+        print("Avg GFLOPs:",avg_flops)
     
     
 if __name__ == "__main__":
@@ -297,4 +306,4 @@ if __name__ == "__main__":
         machine_rank=args.machine_rank,
         dist_url=args.dist_url,
         args=(args,),
-    )
+    ),
