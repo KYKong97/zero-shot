@@ -1,5 +1,5 @@
 MODEL:
-  META_ARCHITECTURE: "OVSeg"
+  META_ARCHITECTURE: "OVSegDEMO"
   BACKBONE:
     FREEZE_AT: 0
     NAME: "D2SwinTransformerV2"
@@ -14,7 +14,7 @@ MODEL:
     PRETRAIN_IMG_SIZE: 384
     USE_CHECKPOINT: False
     PRETRAINED_WINDOW_SIZES: [ 12, 12, 12, 6 ]
-  WEIGHTS: "swinv2_base_patch4_window12_192_22k.pkl"
+  WEIGHTS: "swinv2_large_patch4_window12to24_192to384_22kto1k_ft.pkl"
   PIXEL_MEAN: [123.675, 116.280, 103.530]
   PIXEL_STD: [58.395, 57.120, 57.375]
   SEM_SEG_HEAD:
@@ -67,7 +67,7 @@ MODEL:
     CLIP_MODEL_NAME: "ViT-L/14"
     MASK_FILL: "mean"
     MASK_EXPAND_RATIO: 1.0
-    MASK_THR: 0.4 # choose the foreground objects
+    MASK_THR: 0.35 # choose the foreground objects
     MASK_MATTING: False # use soft background, default not used
     MASK_PROMPT_DEPTH: 3
     MASK_PROMPT_FWD: True # use mask prompt during forward
