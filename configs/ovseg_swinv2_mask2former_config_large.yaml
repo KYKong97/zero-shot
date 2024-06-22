@@ -77,7 +77,7 @@ DATASETS:
   TRAIN: ("coco_2017_train_stuff_sem_seg",)
   TEST: ("ade20k_sem_seg_val",)
 SOLVER:
-  IMS_PER_BATCH: 4
+  IMS_PER_BATCH: 32
   BASE_LR: 0.00006
   MAX_ITER: 120000
   WARMUP_FACTOR: 1e-6
@@ -90,7 +90,7 @@ SOLVER:
   TEST_IMS_PER_BATCH: 1
   CHECKPOINT_PERIOD: 5000
   AMP:
-    ENABLED: True
+    ENABLED: False
   CLIP_GRADIENTS:
     ENABLED: True
     CLIP_TYPE: "full_model"
